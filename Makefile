@@ -48,6 +48,19 @@ efi:
 	-device virtio-blk-device,drive=hd0 \
 	$(EXTRA_ARG)
 
+# press ESC or F2 to enter bios
+edk2:
+	qemu-system-aarch64 -m 1024 -smp 2 -cpu cortex-a57 -M virt -nographic \
+	-drive if=pflash,format=raw,readonly=on,file=QEMU_EFI_64M.fd \
+	-drive if=pflash,format=raw,file=varstore.img \
+	-boot menu=on,splash-time=30000
+
+uefi-shell:
+	qemu-system-aarch64 -m 1024 -smp 2 -cpu cortex-a57 -M virt -nographic \
+	-drive if=pflash,format=raw,readonly=on,file=QEMU_EFI_64M.fd \
+	-drive if=pflash,format=raw,file=varstore.img \
+	-drive file=fat:rw:test
+
 uboot-efi:
 	qemu-system-aarch64 -m 1024 -smp 2 -cpu cortex-a57 -M virt -nographic \
 	-bios u-boot.bin \

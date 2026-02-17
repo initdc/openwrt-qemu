@@ -42,6 +42,15 @@ pkill -f qemu-system-aarch64
   truncate -s 64M varstore.img
   ```
 
+- UEFI Shell https://github.com/pbatard/UEFI-Shell
+
+  ```
+  mkdir -p test/EFI/BOOT
+  cp shellaa64.efi test/EFI/BOOT/BOOTAA64.EFI
+
+  make uefi-shell
+  ```
+
 ### Guide
 
 https://openwrt.org/docs/guide-user/virtualization/qemu
