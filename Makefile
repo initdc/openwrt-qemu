@@ -1,3 +1,5 @@
+ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+
 define EXTRA_ARG
 -device virtio-net,netdev=net0 -netdev user,id=net0,net=192.168.1.0/24,hostfwd=tcp::8080-:80 \
 -device virtio-net,netdev=net1 -netdev user,id=net1,net=100.0.0.0/24
@@ -67,3 +69,6 @@ uboot-efi:
 	-drive if=none,file=$(shell find openwrt-*-squashfs-combined-efi.img),id=hd0 \
 	-device virtio-blk-device,drive=hd0 \
 	$(EXTRA_ARG)
+
+parted-list:
+	parted $(ARGS) unit MiB print
