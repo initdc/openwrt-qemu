@@ -4,5 +4,11 @@
 *.efi
 *.EFI
 
+boot.scr
+dtb
+Image
+
 /test
 /rootfs
+/u-boot
+/edk2

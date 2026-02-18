@@ -61,7 +61,16 @@ uefi-shell:
 	qemu-system-aarch64 -m 1024 -smp 2 -cpu cortex-a57 -M virt -nographic \
 	-drive if=pflash,format=raw,readonly=on,file=QEMU_EFI_64M.fd \
 	-drive if=pflash,format=raw,file=varstore.img \
-	-drive file=fat:rw:test
+	-drive file=fat:rw:edk2
+
+uboot-env:
+	qemu-system-aarch64 -m 1024 -smp 2 -cpu cortex-a57 -M virt -nographic \
+	-bios u-boot.bin \
+ 	-device loader,file=u-boot/boot.scr,addr=0x40200000 \
+	-drive file=fat:rw:u-boot \
+	-drive if=none,file=$(shell find openwrt-*-squashfs-rootfs.img),id=hd0 \
+	-device virtio-blk-device,drive=hd0 \
+	$(EXTRA_ARG)
 
 uboot-efi:
 	qemu-system-aarch64 -m 1024 -smp 2 -cpu cortex-a57 -M virt -nographic \
@@ -72,3 +81,7 @@ uboot-efi:
 
 parted-list:
 	parted $(ARGS) unit MiB print
+
+boot.src:
+	mkimage -A arm64 -O linux -T script -C none \
+	-d u-boot/boot.txt u-boot/boot.scr

@@ -19,7 +19,7 @@ pkill -f qemu-system-aarch64
 - Ubuntu 26.04
 
   ```
-  sudo apt install qemu-system-arm make
+  sudo apt install qemu-system-arm make u-boot-tools
   ```
 - OpenWrt files https://downloads.openwrt.org/releases/24.10.5/targets/armsr/armv8/
 
@@ -45,10 +45,40 @@ pkill -f qemu-system-aarch64
 - UEFI Shell https://github.com/pbatard/UEFI-Shell
 
   ```
-  mkdir -p test/EFI/BOOT
-  cp shellaa64.efi test/EFI/BOOT/BOOTAA64.EFI
+  mkdir -p edk2/EFI/BOOT
+  cp shellaa64.efi edk2/EFI/BOOT/BOOTAA64.EFI
 
   make uefi-shell
+  ```
+
+- U-Boot boot.src (as a disk partition)
+
+  ```sh
+  mkdir -p u-boot/boot
+  cp openwrt-24.10.5-armsr-armv8-generic-kernel.bin u-boot/boot/Image
+  touch u-boot/boot.txt
+  ```
+
+  edit `u-boot/boot.txt`
+  ```sh
+  fatload virtio 1 ${kernel_addr_r} /boot/Image
+  setenv bootargs root=fe00
+  booti ${kernel_addr_r} - ${fdtcontroladdr}
+
+  echo "Boot failed!"
+  ```
+
+  ```sh
+  make boot.src
+  make uboot-env
+
+  # enter u-boot
+  source ${scriptaddr}
+  ```
+
+  U-Boot `.CONFIG`
+  ```sh
+  CONFIG_BOOTCOMMAND="source ${scriptaddr}"
   ```
 
 ### Guide
