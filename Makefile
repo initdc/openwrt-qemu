@@ -79,9 +79,23 @@ uboot-efi:
 	-device virtio-blk-device,drive=hd0 \
 	$(EXTRA_ARG)
 
+tftp:
+	qemu-system-aarch64 -m 4096 -smp 2 -cpu cortex-a57 -M virt -nographic \
+	-bios u-boot.bin \
+	-device virtio-net,netdev=net0 -netdev user,id=net0,tftp=./,net=192.168.1.0/24,hostfwd=tcp::8080-:80 \
+	-device virtio-net,netdev=net1 -netdev user,id=net1,net=100.0.0.0/24
+
+tftp-env:
+	qemu-system-aarch64 -m 4096 -smp 2 -cpu cortex-a57 -M virt -nographic \
+	-bios u-boot.bin \
+ 	-device loader,file=u-boot/boot.scr,addr=0x40200000 \
+	-drive file=fat:rw:u-boot \
+	-device virtio-net,netdev=net0 -netdev user,id=net0,tftp=./,net=192.168.1.0/24,hostfwd=tcp::8080-:80 \
+	-device virtio-net,netdev=net1 -netdev user,id=net1,net=100.0.0.0/24
+
 parted-list:
 	parted $(ARGS) unit MiB print
 
-boot.src:
+boot.scr:
 	mkimage -A arm64 -O linux -T script -C none \
 	-d u-boot/boot.txt u-boot/boot.scr

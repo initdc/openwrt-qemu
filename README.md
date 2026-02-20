@@ -31,6 +31,7 @@ pkill -f qemu-system-aarch64
   openwrt-24.10.5-armsr-armv8-generic-kernel.bin
   openwrt-24.10.5-armsr-armv8-generic-squashfs-combined-efi.img
   openwrt-24.10.5-armsr-armv8-generic-squashfs-rootfs.img
+  openwrt-24.10.5-armsr-armv8-rootfs.cpio.gz
   u-boot.bin
   ```
 
@@ -51,7 +52,7 @@ pkill -f qemu-system-aarch64
   make uefi-shell
   ```
 
-- U-Boot boot.src (as a disk partition)
+- U-Boot `boot.scr` (as a disk partition)
 
   ```sh
   mkdir -p u-boot/boot
@@ -64,12 +65,10 @@ pkill -f qemu-system-aarch64
   fatload virtio 1 ${kernel_addr_r} /boot/Image
   setenv bootargs root=fe00
   booti ${kernel_addr_r} - ${fdtcontroladdr}
-
-  echo "Boot failed!"
   ```
 
   ```sh
-  make boot.src
+  make boot.scr
   make uboot-env
 
   # enter u-boot
@@ -81,9 +80,16 @@ pkill -f qemu-system-aarch64
   CONFIG_BOOTCOMMAND="source ${scriptaddr}"
   ```
 
+### Network Boot
+
+- [Network Boot](network-boot.md)
+
 ### Guide
 
-https://openwrt.org/docs/guide-user/virtualization/qemu
+- https://openwrt.org/docs/guide-user/virtualization/qemu
+- https://linuxkernel.org.cn/doc/html/latest/admin-guide/nfs/nfsroot.html
+- https://linuxkernel.org.cn/doc/html/latest/filesystems/ramfs-rootfs-initramfs.html
+- https://linuxkernel.org.cn/doc/html/latest/admin-guide/initrd.html
 
 ### License
 

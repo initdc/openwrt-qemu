@@ -3,10 +3,13 @@
 *.fd
 *.efi
 *.EFI
+*.gz
+*vmlin*
+*initrd*
+Image*
 
 boot.scr
 dtb
-Image
 
 /test
 /rootfs
