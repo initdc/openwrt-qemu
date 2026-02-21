@@ -16,7 +16,7 @@ pkill -f qemu-system-aarch64
 
 ### Prepare
 
-- Ubuntu 26.04
+- Ubuntu 24.04 (GNU coreutils for building OpenWrt) or Ubuntu 26.04 (for qemu 10 RVA23)
 
   ```
   sudo apt install qemu-system-arm make u-boot-tools
@@ -64,7 +64,7 @@ pkill -f qemu-system-aarch64
   ```sh
   fatload virtio 1 ${kernel_addr_r} /boot/Image
   setenv bootargs root=fe00
-  booti ${kernel_addr_r} - ${fdtcontroladdr}
+  booti ${kernel_addr_r} - ${fdt_addr}
   ```
 
   ```sh

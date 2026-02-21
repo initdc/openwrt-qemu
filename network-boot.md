@@ -25,6 +25,8 @@
 
   then `make tftp`
 
+  load `cpio.gz`
+
   ```sh
   # enter u-boot
   dhcp
@@ -33,7 +35,30 @@
   tftp ${ramdisk_addr_r} openwrt-24.10.5-armsr-armv8-rootfs.cpio.gz
 
   setenv bootargs root=/dev/ram0
-  booti ${kernel_addr_r} ${ramdisk_addr_r}:${filesize} ${fdtcontroladdr}
+  booti ${kernel_addr_r} ${ramdisk_addr_r}:${filesize} ${fdt_addr}
+  ```
+
+  load `ext4`
+  
+  <!-- ```sh
+  # get file size in KiB
+  du --block-size=KiB openwrt-24.10.5-armsr-armv8-generic-ext4-rootfs.img
+  106496  openwrt-24.10.5-armsr-armv8-generic-ext4-rootfs.img
+
+  # get more 20% size
+  expr 106496 "*" 6 / 5
+  127795
+  ``` -->
+
+  ```sh
+  # enter u-boot
+  dhcp
+
+  tftp ${kernel_addr_r} Image
+  tftp ${ramdisk_addr_r} openwrt-24.10.5-armsr-armv8-generic-ext4-rootfs.img
+
+  setenv bootargs root=/dev/ram0 rw ramdisk_size=0x${filesize}
+  booti ${kernel_addr_r} ${ramdisk_addr_r}:${filesize} ${fdt_addr}
   ```
 
   you can compile it as `boot.scr`, then `make tftp-env`
